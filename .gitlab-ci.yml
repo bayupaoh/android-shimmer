@@ -1,0 +1,23 @@
+image: jangrewe/gitlab-ci-android
+
+stages:
+  - test
+  - build
+#cek debug
+test:
+  stage: test
+  script:
+    - chmod +x gradlew
+    - ./gradlew --stacktrace clean assembleDebug
+  artifacts:
+    paths:
+    - app/build/outputs/
+#cek release apk
+build:
+  stage: build
+  script:
+    - chmod +x gradlew
+    - ./gradlew --stacktrace clean assembleRelease
+  artifacts:
+    paths:
+    - app/build/outputs/
