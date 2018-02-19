@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import com.airbnb.lottie.LottieAnimationView
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import me.bayupaoh.R
 import me.bayupaoh.base.ui.BaseActivity
@@ -14,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_member.*
  * Created by DODYDMW19 on 1/30/2018.
  */
 
-class MemberActivity : BaseActivity(), MemberView , MemberItemView.OnActionListener{
+class MemberActivity : BaseActivity(), MemberView, MemberItemView.OnActionListener {
 
     private var memberPresenter: MemberPresenter? = null
     private var currentPage: Int = 1
@@ -34,6 +37,20 @@ class MemberActivity : BaseActivity(), MemberView , MemberItemView.OnActionListe
         memberPresenter = MemberPresenter()
         memberPresenter?.attachView(this)
         memberPresenter?.getMember(currentPage)
+
+        btnRetryEmpty.setOnClickListener { view ->
+            emptyState.visibility = GONE
+            shimmerMember.visibility = VISIBLE
+            shimmerMember.startShimmerAnimation()
+            memberPresenter?.getMember(currentPage)
+        }
+
+        btnRetryError.setOnClickListener { view ->
+            errorState.visibility = GONE
+            shimmerMember.visibility = VISIBLE
+            shimmerMember.startShimmerAnimation()
+            memberPresenter?.getMember(currentPage)
+        }
     }
 
     private fun initProduct() {
@@ -77,9 +94,16 @@ class MemberActivity : BaseActivity(), MemberView , MemberItemView.OnActionListe
 
     override fun showMembers(members: List<User>?) {
         members.let {
+            if (members == null) {
+                errorState.visibility = VISIBLE
+            } else if (members.isEmpty()) {
+                emptyState.visibility = VISIBLE
+            }
+
+            shimmerMember.stopShimmerAnimation()
+            shimmerMember.visibility = View.GONE
             if (members != null && members.isNotEmpty()) {
-                shimmerMember.stopShimmerAnimation()
-                shimmerMember.visibility = View.GONE
+                errorState.visibility = GONE
                 if (currentPage == 1) {
                     initProduct()
                 }
@@ -92,8 +116,16 @@ class MemberActivity : BaseActivity(), MemberView , MemberItemView.OnActionListe
     }
 
     override fun onFailed(message: String?) {
-        message.let {
-            showToast(message!!)
+        if (currentPage == 1) {
+            errorState.visibility = VISIBLE
+            shimmerMember.stopShimmerAnimation()
+            shimmerMember.visibility = View.GONE
+            memberList.visibility = View.GONE
+        } else {
+            errorState.visibility = GONE
+            message.let {
+                showToast(message!!)
+            }
         }
     }
 
@@ -111,8 +143,8 @@ class MemberActivity : BaseActivity(), MemberView , MemberItemView.OnActionListe
     }
 
     override fun onClicked(view: MemberItemView) {
-       view.getData().let {
-           showToast(view.getData().firstName!!)
-       }
+        view.getData().let {
+            showToast(view.getData().firstName!!)
+        }
     }
 }

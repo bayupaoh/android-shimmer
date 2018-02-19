@@ -57,11 +57,14 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/emptyAnimation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/empty_state" />
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="empty_status.json"
+                app:lottie_loop="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,8 +73,56 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="No member found" />
 
+            <Button
+                android:id="@+id/btnRetryEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retry"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/errorState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/errorAnimation"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                app:lottie_autoPlay="true"
+                app:lottie_scale="2"
+                app:lottie_fileName="error.json"
+                app:lottie_loop="true" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="Oops.. Something wrong" />
+
+            <Button
+                android:id="@+id/btnRetryError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retry"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
     </RelativeLayout>
 
 
